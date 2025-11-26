@@ -1,0 +1,100 @@
+{% extends "base_patient.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Book New Appointment</h1>
+        <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-arrow-left"></i>
+            </span>
+            <span class="text">Back to Dashboard</span>
+        </a>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Appointment Details</h6>
+        </div>
+        <div class="card-body">
+            <form method="POST" id="appointmentForm">
+                <div class="row">
+                    <!-- Department -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select class="form-control" id="department" name="department" required onchange="this.form.submit()">
+                                <option value="">-- Select Department --</option>
+                                {% for dept in departments %}
+                                <option value="{{ dept.department_id }}" {% if selected_department == dept.department_id|string %}selected{% endif %}>{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Doctor -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="doctor_id">Doctor</label>
+                            <select class="form-control" id="doctor_id" name="doctor_id" required onchange="this.form.submit()">
+                                <option value="">-- Select Doctor --</option>
+                                {% for doctor in doctors %}
+                                <option value="{{ doctor.doctor_id }}" {% if selected_doctor == doctor.doctor_id|string %}selected{% endif %}>
+                                    Dr. {{ doctor.first_name }} {{ doctor.last_name }} ({{ doctor.department_name }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Field -->
+<div class="form-group">
+    <label for="date">Appointment Date</label>
+    <select name="date" class="form-control" required>
+        <option value="">-- Select Date --</option>
+        {% for date in available_dates %}
+        <option value="{{ date }}" {% if date == request.form.date %}selected{% endif %}>{{ date }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- Time Field -->
+<div class="form-group">
+    <label for="time">Appointment Time</label>
+    <select name="time" class="form-control" required>
+        <option value="">-- Select Time --</option>
+        {% for slot in time_slots %}
+        <option value="{{ slot }}" {% if slot == request.form.time %}selected{% endif %}>{{ slot }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+                <!-- Reason -->
+                <div class="form-group">
+                    <label for="reason">Reason for Visit</label>
+                    <textarea class="form-control" id="reason" name="reason" rows="3"
+                              placeholder="Briefly describe the reason for your visit">{{ reason }}</textarea>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="terms" required>
+                        <label class="custom-control-label" for="terms">
+                            I confirm that all information provided is accurate
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-calendar-check mr-2"></i>Book Appointment
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
